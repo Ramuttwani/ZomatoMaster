@@ -5,6 +5,7 @@ import passport from "passport";
 const Router = express.Router();
 
 import {UserModel} from "../../Database/User";
+import {ValidateSignup,ValidateSignin} from "../../validation/auth";
 /*
 Route          /signup
 Description    Signup with email password
@@ -14,6 +15,7 @@ Method         POST
 */
 Router.post("/signup",async(req,res) => {
    try{ 
+       await ValidateSignup(req.body.credentials);
        await UserModel.findEmailAndPhone(req.body.credentials);
        
        //DB
@@ -36,7 +38,7 @@ Method         POST
 */
 Router.post("/signin",async(req,res) => {
     try{ 
-
+        await ValidateSignin(req.body.credentials);
      const user = await UserModel.findByEmailAndPassword(req.body.credentials);
         await UserModel.findEmailAndPhone(req.body.credentials);
         
